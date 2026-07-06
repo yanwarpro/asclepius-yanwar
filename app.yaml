@@ -1,0 +1,2 @@
+runtime: nodejs22
+entrypoint: "npx http-server . -p $PORT"

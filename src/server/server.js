@@ -47,6 +47,7 @@ const init = async () => {
 
       // Tangani kesalahan pada rute /predict (kembalikan 400 Bad Request)
       if (request.path === '/predict') {
+        console.error('Prediction error:', response);
         const newResponse = h.response({
           status: 'fail',
           message: 'Terjadi kesalahan dalam melakukan prediksi'
