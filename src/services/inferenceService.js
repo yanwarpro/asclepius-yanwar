@@ -3,7 +3,7 @@ const tf = require('@tensorflow/tfjs-node');
 async function predictClassification(model, imageBuffer) {
   try {
     const tensor = tf.node
-      .decodeImage(imageBuffer)
+      .decodeImage(imageBuffer, 3)
       .resizeNearestNeighbor([224, 224])
       .expandDims()
       .toFloat();
@@ -22,6 +22,7 @@ async function predictClassification(model, imageBuffer) {
 
     return { confidenceScore, result, suggestion };
   } catch (error) {
+    console.error('Inference error details:', error);
     throw new Error('Terjadi kesalahan dalam melakukan prediksi');
   }
 }
