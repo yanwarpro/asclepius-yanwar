@@ -1,11 +1,55 @@
 require('dotenv').config();
 const Hapi = require('@hapi/hapi');
 const routes = require('./routes');
-const tf = require('@tensorflow/tfjs-node');
+let tf;
+try {
+  tf = require('@tensorflow/tfjs-node');
+} catch (e) {
+  tf = require('@tensorflow/tfjs');
+}
 
 async function loadModel() {
-  const modelUrl = process.env.MODEL_URL || 'https://storage.googleapis.com/submissions-model/assets/model.json';
+  const modelUrl = process.env.MODEL_URL || 'https://storage.googleapis.com/submissionmlgc-yanwar-model/model.json';
   console.log(`Loading model from: ${modelUrl}`);
+
+  if (modelUrl.startsWith('file://')) {
+    const fs = require('fs');
+    const path = require('path');
+    
+    // Hapus prefix 'file://'
+    let filePath = modelUrl.substring(7);
+    // Pada Windows, jika path diawali dengan '/' diikuti drive letter (misal '/d:/...'), buang '/' pertama
+    if (filePath.startsWith('/') && (filePath[2] === ':' || filePath[2] === '|')) {
+      filePath = filePath.substring(1);
+    }
+
+    const localIOHandler = {
+      load: async () => {
+        const modelJsonContent = fs.readFileSync(filePath, 'utf8');
+        const modelJson = JSON.parse(modelJsonContent);
+        const modelTopology = modelJson.modelTopology;
+        const weightSpecs = modelJson.weightsManifest;
+
+        const weightDataBuffers = [];
+        for (const group of weightSpecs) {
+          for (const pathStr of group.paths) {
+            const weightFilePath = path.join(path.dirname(filePath), pathStr);
+            const weightBuffer = fs.readFileSync(weightFilePath);
+            weightDataBuffers.push(weightBuffer);
+          }
+        }
+        const weightData = Buffer.concat(weightDataBuffers).buffer;
+
+        return {
+          modelTopology,
+          weightSpecs: weightSpecs.flatMap(g => g.weights),
+          weightData
+        };
+      }
+    };
+    return tf.loadGraphModel(localIOHandler);
+  }
+
   return tf.loadGraphModel(modelUrl);
 }
 

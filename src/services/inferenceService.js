@@ -1,4 +1,9 @@
-const tf = require('@tensorflow/tfjs-node');
+let tf;
+try {
+  tf = require('@tensorflow/tfjs-node');
+} catch (e) {
+  tf = require('@tensorflow/tfjs');
+}
 
 async function predictClassification(model, imageBuffer) {
   try {
