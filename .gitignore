@@ -16,3 +16,8 @@ node_modules/
 
 ### Additional directories
 dist
+
+# User generated test files
+preview.png
+test.txt
+
