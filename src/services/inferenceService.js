@@ -4,6 +4,7 @@ try {
 } catch (e) {
   tf = require('@tensorflow/tfjs');
 }
+const InputError = require('../exceptions/InputError');
 
 async function predictClassification(model, imageBuffer) {
   try {
@@ -28,7 +29,7 @@ async function predictClassification(model, imageBuffer) {
     return { confidenceScore, result, suggestion };
   } catch (error) {
     console.error('Inference error details:', error);
-    throw new Error('Terjadi kesalahan dalam melakukan prediksi');
+    throw new InputError('Terjadi kesalahan dalam melakukan prediksi');
   }
 }
 

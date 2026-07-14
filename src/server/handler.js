@@ -1,10 +1,19 @@
 const predictClassification = require('../services/inferenceService');
 const { storeData, getHistories } = require('../services/storeData');
 const { v4: uuidv4 } = require('uuid');
+const InputError = require('../exceptions/InputError');
 
 async function postPredictHandler(request, h) {
-  const { image } = request.payload;
+  const { image } = request.payload || {};
   const { model } = request.server.app;
+
+  if (!image) {
+    throw new InputError('Terjadi kesalahan dalam melakukan prediksi');
+  }
+
+  if (!Buffer.isBuffer(image)) {
+    throw new InputError('Terjadi kesalahan dalam melakukan prediksi');
+  }
 
   const id = uuidv4();
   const createdAt = new Date().toISOString();
