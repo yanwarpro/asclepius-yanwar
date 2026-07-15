@@ -1,4 +1,4 @@
-const BASE_URL = 'https://asclepius-api-678856957398.asia-southeast2.run.app';
+const BASE_URL = 'http://136.66.55.57';
 
 const ENDPOINT = {
   predict: `${BASE_URL}/predict`,
