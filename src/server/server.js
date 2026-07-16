@@ -87,7 +87,7 @@ const init = async () => {
     }
 
     if (response.isBoom) {
-      const originalError = response.originalError;
+      const originalError = response.data || response.originalError;
       if (originalError instanceof ClientError) {
         const newResponse = h.response({
           status: 'fail',
