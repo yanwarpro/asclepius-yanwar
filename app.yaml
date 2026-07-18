@@ -1,2 +1,29 @@
 runtime: nodejs22
-entrypoint: "npx http-server . -p $PORT"
+
+handlers:
+  # Route untuk styles
+  - url: /src/styles
+    static_dir: src/styles
+
+  # Route untuk scripts
+  - url: /src/scripts
+    static_dir: src/scripts
+
+  # Route untuk images
+  - url: /src/images
+    static_dir: src/images
+
+  # Route untuk favicon.png
+  - url: /favicon.png
+    static_files: favicon.png
+    upload: favicon.png
+
+  # Route untuk halaman utama index.html
+  - url: /
+    static_files: index.html
+    upload: index.html
+
+  # Catch-all route untuk file lainnya
+  - url: /(.*)
+    static_files: \1
+    upload: (.*)
