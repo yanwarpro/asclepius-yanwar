@@ -18,26 +18,26 @@ async function postPredictHandler(request, h) {
   const id = uuidv4();
   const createdAt = new Date().toISOString();
 
-  // Jalankan prediksi
-  const { confidenceScore, result, suggestion } = await predictClassification(model, image);
+  try {
+    const { confidenceScore, result, suggestion } = await predictClassification(model, image);
+    const data = {
+      id,
+      result,
+      suggestion,
+      createdAt
+    };
+    await storeData(id, data);
 
-  const data = {
-    id,
-    result,
-    suggestion,
-    createdAt
-  };
-
-  // Simpan ke database Firestore
-  await storeData(id, data);
-
-  const response = h.response({
-    status: 'success',
-    message: 'Model is predicted successfully',
-    data
-  });
-  response.code(201);
-  return response;
+    const response = h.response({
+      status: 'success',
+      message: 'Model is predicted successfully',
+      data
+    });
+    response.code(201);
+    return response;
+  } catch (error) {
+    throw new InputError('Terjadi kesalahan dalam melakukan prediksi');
+  }
 }
 
 async function getPredictHistoriesHandler(request, h) {
