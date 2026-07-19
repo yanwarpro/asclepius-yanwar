@@ -1,6 +1,6 @@
 {  
- "backend-service-url": "http://34.66.195.127",
- "frontend-service-url": "https://automate-social-media-464001.de.r.appspot.com",
- "project-id": "automate-social-media-464001",
- "bucket-name": "submissionmlgc-yanwar-model"
+ "backend-service-url": "http://136.109.77.203",
+ "frontend-service-url": "https://submissionmlgc-yanwar-baru.uw.r.appspot.com",
+ "project-id": "submissionmlgc-yanwar-baru",
+ "bucket-name": "submissionmlgc-yanwar-baru-model"
 }

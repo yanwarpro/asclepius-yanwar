@@ -1,4 +1,4 @@
-const BASE_URL = 'http://34.66.195.127';
+const BASE_URL = 'http://136.109.77.203';
 
 const ENDPOINT = {
   predict: `${BASE_URL}/predict`,

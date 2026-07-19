@@ -23,14 +23,14 @@ mkdir -p /app
 cd /app
 
 # Download backend ZIP from GCS
-gcloud storage cp gs://automate-social-media-464001-source-bucket/backend.zip backend.zip
+gcloud storage cp gs://submissionmlgc-yanwar-baru-source/backend.zip backend.zip
 unzip -o backend.zip
 rm backend.zip
 
 # Create .env file for production
 cat << 'EOF' > .env
 PORT=80
-MODEL_URL=https://storage.googleapis.com/submissionmlgc-yanwar-model/model.json
+MODEL_URL=https://storage.googleapis.com/submissionmlgc-yanwar-baru-model/model.json
 EOF
 
 # Install dependencies (production only)
@@ -49,7 +49,7 @@ WorkingDirectory=/app
 ExecStart=/usr/bin/npm start
 Restart=always
 Environment=PORT=80
-Environment=MODEL_URL=https://storage.googleapis.com/submissionmlgc-yanwar-model/model.json
+Environment=MODEL_URL=https://storage.googleapis.com/submissionmlgc-yanwar-baru-model/model.json
 
 [Install]
 WantedBy=multi-user.target
