@@ -1,0 +1,26 @@
+### IDE
+.idea
+.vscode
+
+### Node
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+### Additional directories
+dist
+
+# User generated test files
+preview.png
+test.txt
+
+# Submission packages
+submission.zip
+
