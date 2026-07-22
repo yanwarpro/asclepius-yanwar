@@ -29,18 +29,45 @@ function isValidImage(buffer) {
   return false;
 }
 
+const { PNG } = require('pngjs');
+const jpeg = require('jpeg-js');
+
+function decodeImageToTensor(imageBuffer) {
+  if (tf.node && tf.node.decodeImage) {
+    return tf.node.decodeImage(imageBuffer, 3);
+  }
+
+  let width, height, data;
+  if (imageBuffer[0] === 0x89 && imageBuffer[1] === 0x50) {
+    const png = PNG.sync.read(imageBuffer);
+    width = png.width;
+    height = png.height;
+    data = png.data;
+  } else {
+    const raw = jpeg.decode(imageBuffer);
+    width = raw.width;
+    height = raw.height;
+    data = raw.data;
+  }
+
+  const rgb = new Uint8Array(width * height * 3);
+  for (let i = 0; i < width * height; i++) {
+    rgb[i * 3] = data[i * 4];
+    rgb[i * 3 + 1] = data[i * 4 + 1];
+    rgb[i * 3 + 2] = data[i * 4 + 2];
+  }
+
+  return tf.tensor3d(rgb, [height, width, 3], 'int32');
+}
+
 async function predictClassification(model, imageBuffer) {
   try {
     if (!isValidImage(imageBuffer)) {
       throw new InputError('Terjadi kesalahan dalam melakukan prediksi');
     }
     
-    if (!tf.node) {
-      throw new InputError('Terjadi kesalahan dalam melakukan prediksi');
-    }
-    
-    const tensor = tf.node
-      .decodeImage(imageBuffer, 3)
+    const imageTensor = decodeImageToTensor(imageBuffer);
+    const tensor = imageTensor
       .resizeNearestNeighbor([224, 224])
       .expandDims()
       .toFloat();
