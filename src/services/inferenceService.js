@@ -7,7 +7,7 @@ try {
 const InputError = require('../exceptions/InputError');
 
 function isValidImage(buffer) {
-  if (buffer.length < 8) return false;
+  if (!buffer || buffer.length < 100) return false;
   
   // Check JPEG magic number (FF D8)
   if (buffer[0] === 0xFF && buffer[1] === 0xD8) {
