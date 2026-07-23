@@ -29,13 +29,13 @@ function isValidImage(buffer) {
   return false;
 }
 
-const { PNG } = require('pngjs');
-const jpeg = require('jpeg-js');
-
 function decodeImageToTensor(imageBuffer) {
   if (tf.node && tf.node.decodeImage) {
     return tf.node.decodeImage(imageBuffer, 3);
   }
+
+  const { PNG } = require('pngjs');
+  const jpeg = require('jpeg-js');
 
   let width, height, data;
   if (imageBuffer[0] === 0x89 && imageBuffer[1] === 0x50) {
@@ -87,6 +87,9 @@ async function predictClassification(model, imageBuffer) {
     return { confidenceScore, result, suggestion };
   } catch (error) {
     console.error('Inference error details:', error);
+    if (error instanceof InputError) {
+      throw error;
+    }
     throw new InputError('Terjadi kesalahan dalam melakukan prediksi');
   }
 }

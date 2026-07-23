@@ -7,11 +7,7 @@ async function postPredictHandler(request, h) {
   const { image } = request.payload || {};
   const { model } = request.server.app;
 
-  if (!image) {
-    throw new InputError('Terjadi kesalahan dalam melakukan prediksi');
-  }
-
-  if (!Buffer.isBuffer(image)) {
+  if (!image || !Buffer.isBuffer(image)) {
     throw new InputError('Terjadi kesalahan dalam melakukan prediksi');
   }
 
@@ -36,6 +32,9 @@ async function postPredictHandler(request, h) {
     response.code(201);
     return response;
   } catch (error) {
+    if (error instanceof InputError) {
+      throw error;
+    }
     throw new InputError('Terjadi kesalahan dalam melakukan prediksi');
   }
 }
